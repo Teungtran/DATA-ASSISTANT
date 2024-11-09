@@ -1,11 +1,12 @@
-# SQL Generator Assistant 🤖💾
+# C 🤖💾
 
 ## Overview
-This Streamlit-powered SQL Generator Assistant leverages Google's Generative AI to help developers and data professionals quickly generate SQL queries based on natural language descriptions.
+This Streamlit-powered Assistant leverages Google's Generative AI to help developers and data professionals quickly generate SQL queries , Plots based on natural language descriptions.
 
 ## 🌟 Features
 - Generate SQL queries from natural language inputs
-- Support for multiple database dialects
+- Support for multiple CSV/EXCEL file dialects
+- Generate plots for simple visualization
 - User-friendly Streamlit interface
 - Powered by Google's advanced generative AI
 - Query validation and optimization suggestions
@@ -15,6 +16,7 @@ This Streamlit-powered SQL Generator Assistant leverages Google's Generative AI 
 - Streamlit
 - Google Generative AI SDK
 - Google Cloud API Key
+- pandasai
 
 ## 📦 Installation
 
