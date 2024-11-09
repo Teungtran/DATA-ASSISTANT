@@ -104,20 +104,6 @@ ai_settings:
 - Average query generation time: < 2 seconds
 - Support for 60+ SQL dialects per minute
 
-## 🚧 Limitations
-- Complex multi-table joins might require manual refinement
-- Dependent on the quality and specificity of input description
-- Requires basic understanding of database schema
-- Long respond time for complex querries such as Window Function....
-- ì   - MSSQL
-    .....
-
-ai_settings:
-  max_query_length: 500
-  temperature: 0.7
-  safety_threshold: moderate
-```
-
 ## 📝 Usage Examples
 
 ### 1. Basic Query Generation
