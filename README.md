@@ -1,4 +1,4 @@
-# C 🤖💾
+# DATA ANALYST ASSISSTANT 🤖💾
 
 ## Overview
 This Streamlit-powered Assistant leverages Google's Generative AI to help developers and data professionals quickly generate SQL queries , Plots based on natural language descriptions.
