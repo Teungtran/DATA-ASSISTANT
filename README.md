@@ -109,6 +109,56 @@ ai_settings:
 - Dependent on the quality and specificity of input description
 - Requires basic understanding of database schema
 - Long respond time for complex querries such as Window Function....
+- ì   - MSSQL
+    .....
+
+ai_settings:
+  max_query_length: 500
+  temperature: 0.7
+  safety_threshold: moderate
+```
+
+## 📝 Usage Examples
+
+### 1. Basic Query Generation
+- Input: "Get all customers from New York"
+- Output: 
+  ```sql
+  SELECT * FROM customers WHERE city = 'New York';
+  ```
+
+### 2. Complex Query Generation
+- Input: "Find top 5 products by sales in the last quarter"
+- Output:
+  ```sql
+  SELECT 
+    product_id, 
+    product_name, 
+    SUM(sales_amount) as total_sales
+  FROM sales
+  WHERE sale_date BETWEEN '2023-10-01' AND '2023-12-31'
+  GROUP BY product_id, product_name
+  ORDER BY total_sales DESC
+  LIMIT 5;
+  ```
+
+
+## 🛡️ Security
+- Never commit API keys or sensitive credentials to the repository
+- Use environment variables or secure secret management
+- Implement input sanitization to prevent SQL injection
+
+## 📊 Performance Metrics
+- Average query generation time: < 2 seconds
+- Support for 60+ SQL dialects per minute
+
+## 🚧 Limitations
+- Complex multi-table joins might require manual refinement
+- Dependent on the quality and specificity of input description
+- Requires basic understanding of database schema
+- Long respond time for complex querries such as Window Function....
+- inflexibel plots ( only support Line, Bar, Hist plot)
+- only support under 200mb input CSV/EXCEL file
 
 ## 🙏 Acknowledgments
 - [Streamlit](https://streamlit.io/)
