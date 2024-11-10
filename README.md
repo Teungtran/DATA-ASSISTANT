@@ -141,9 +141,8 @@ ai_settings:
 ## 🚧 Limitations
 - Dependent on the quality and specificity of input description
 - Requires basic understanding of database schema
-- Long respond time for complex querries such as Window Function....
+- Do not have function to connect to your database  
 - inflexibel plots ( only support Line, Bar, Hist plot, heatmap and pie chart)
-- Cannot handle while with categorical data
 - only support under 200mb input CSV/EXCEL file
 
 ## 🙏 Acknowledgments
