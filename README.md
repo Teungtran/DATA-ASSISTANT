@@ -139,11 +139,11 @@ ai_settings:
 - Support for 60+ SQL dialects per minute
 
 ## 🚧 Limitations
-- Complex multi-table joins might require manual refinement
 - Dependent on the quality and specificity of input description
 - Requires basic understanding of database schema
 - Long respond time for complex querries such as Window Function....
-- inflexibel plots ( only support Line, Bar, Hist plot)
+- inflexibel plots ( only support Line, Bar, Hist plot, heatmap and pie chart)
+- Cannot handle while with categorical data
 - only support under 200mb input CSV/EXCEL file
 
 ## 🙏 Acknowledgments
