@@ -81,11 +81,17 @@ def pie_plot(df, x_column):
         return buf_pie
     except Exception as e:
         return f"Error generating pie chart: {e}"
+# Data has categorical features
+def get_dummies(df):
+    categorical_cols = df.select_dtypes(include=['object']).columns
+    if len(categorical_cols) > 0:
+        df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
+    return df
 
 
 # _____________________________Set up the Streamlit interface_____________________________________
 st.set_page_config(page_title="YOUR DATA ANALYST ASSISTANT", layout="wide")
-st.title("YOUR DATA ANALYST ASSISTANT")
+st.title("YOUR DATA ANALYST ASSISTANT🤖💾")
 st.divider()
 st.sidebar.header('INSTRUCTION')
 st.sidebar.info('WRITE YOUR  QUESTION IN ENGLISH THEN CLICK GENERATE BUTTON TO GET THE SQL QUERY')
@@ -124,6 +130,10 @@ except Exception as e:
 if df is not None:
     with st.expander("Data Preview"):
         st.dataframe(df.head(100))
+    if st.button("Convert Categorical data to Numberic"):
+        df_converted = get_dummies(df)
+        st.write("Data after getting dummies:")
+        st.dataframe(df_converted.head(100))
 
     # Dropdowns for selecting x and y columns for plotting
     st.sidebar.subheader("Select Columns and Plot Type")
@@ -156,13 +166,14 @@ if df is not None:
     # Plot button and handling
     if st.button("Generate Plot"):
         if plot_type == "Heatmap":
-            heat_map_img = heat_map(df)
+            df_converted = get_dummies(df) # Convert categorical data to numeric for heatmap
+            heat_map_img = heat_map(df_converted)
             if isinstance(heat_map_img, str): #check for error message
                 st.error(heat_map_img)
             else:
                 st.image(heat_map_img, caption=f"Correlation of the dataset")
         elif plot_type == "Pie":
-            pie_plot_img = pie_plot(df, x_column)
+            pie_plot_img = pie_plot(df_converted, x_column)
             if isinstance(pie_plot_img, str): #check for error message
                 st.error(pie_plot_img)
             else:
