@@ -22,8 +22,8 @@ This Streamlit-powered Assistant leverages Google's Generative AI to help develo
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/sql-generator-assistant.git
-cd sql-generator-assistant
+git clone https://github.com/your-username/DATA-ASSISTANT.git
+cd DATA-ASSISTANT
 ```
 
 ### 2. Create Virtual Environment
