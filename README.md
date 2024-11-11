@@ -53,16 +53,6 @@ streamlit run SQL.py
 
 ## 🔧 Configuration
 
-### `config.yaml`
-```yaml
-database:
-  supported_dialects:
-    - MySQL
-    - PostgreSQL
-    - SQLite
-    - Oracle
-    - MSSQL
-    .....
 
 ai_settings:
   max_query_length: 500
