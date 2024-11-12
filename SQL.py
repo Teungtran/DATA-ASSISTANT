@@ -10,8 +10,10 @@ import pandas as pd
 import csv
 import numpy as np
 import chardet
-import pyodbc
-from langchain.utilities import SQLDatabase
+from plotly.subplots import make_subplots
+import plotly.graph_objs as go
+import plotly.io as pio
+import plotly.express as px
 #streamlit run SQL.py
 # API Keys 
 GOOGLE_API_KEY = "AIzaSyBxLB3VTohn1tmfG2kMe_Is_XHkRIH7rZU"
@@ -41,25 +43,43 @@ class OutputParser(ResponseParser):
         st.write(result["value"])
         return
 
-# ___________________________Function to generate various plot types using Seaborn_____________________________
+# ___________________________Function to generate various plot types using PLotly_____________________________
 def generate_plot(df, x_column, y_column, plot_type):
-    plt.figure(figsize=(10, 6))
-    plt.title(f"Plot for {plot_type} between {x_column} and {y_column}")
-    if plot_type == "Line Plot":
-        sns.lineplot(data=df, x=x_column, y=y_column, marker='o')
-    elif plot_type == "Bar Plot":
-        sns.barplot(data=df, x=x_column, y=y_column)
-    elif plot_type == "Histogram":
-        sns.histplot(data=df, x=x_column, bins=20, kde=True)   
-    plt.xlabel(x_column)
-    plt.ylabel(y_column)
-    plt.title(f'{plot_type}: {y_column} vs {x_column}')
-
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    plt.close()
-    return buf
+    if plot_type == "📈 Line Plot":
+        fig = px.line(df, x=x_column, y=y_column,
+                    title=f"Line Plot: {y_column} vs {x_column}")
+        
+        # Set the trace name to the y-column name directly
+        fig.data[0].name = y_column
+        st.sidebar.info("💡 Line plots work best with continuous data or time series")
+    elif plot_type == "📊 Bar Plot":
+        fig = px.bar(df, x=x_column, y=y_column,
+                    title=f"Bar Plot: {y_column} vs {x_column}")
+        # Set the trace name to the y-column name directly
+        fig.data[0].name = y_column
+        st.sidebar.info("💡 Bar plots work best with categorical X-axis data")
+    # Update layout
+    fig.update_layout(
+        xaxis_title=x_column,
+        yaxis_title=y_column,
+        template="plotly_white",
+        showlegend=True,
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=1.02
+        )
+    )
+    
+    return fig
+def histogram(df, x_column):
+    if plot_type == "📉 Histogram":
+        fig = px.histogram(df, x=x_column, nbins=30, title=f"Histogram: {x_column}")
+                        
+        # Set the trace name to the y-column name directly
+        fig.data[0].name = x_column
+    return fig
 
 def heat_map(df):
     plt.figure(figsize=(10, 8))
@@ -75,17 +95,37 @@ def heat_map(df):
         return f"Error generating heatmap: {e}"
 
 def pie_plot(df, x_column):
-    plt.figure(figsize=(10, 8))
     try:
-        plt.title(f"Pie chart of the attribute {x_column}")
-        plt.pie(df[x_column].value_counts(), labels=df[x_column].value_counts().index, autopct='%1.1f%%')
-        buf_pie = io.BytesIO()
-        plt.savefig(buf_pie, format='png')
-        buf_pie.seek(0)
-        plt.close()
-        return buf_pie
+        # Calculate value counts for the column
+        value_counts = df[x_column].value_counts()
+        
+        fig = px.pie(values=value_counts.values,
+                    names=value_counts.index,
+                    title=f"Distribution of {x_column}")
+        
+        # Update layout
+        fig.update_layout(
+            showlegend=True,
+            width=700,
+            height=700,
+            legend=dict(
+                title=x_column,
+                yanchor="top",
+                y=0.99,
+                xanchor="left",
+                x=1.02
+            )
+        )
+        
+        # Update hover template
+        fig.update_traces(
+            hovertemplate="%{label}<br>Count: %{value}<br>Percentage: %{percent}<extra></extra>"
+        )
+        
+        return fig
     except Exception as e:
         return f"Error generating pie chart: {e}"
+
 # Data has categorical features
 def get_dummies(df):
     categorical_cols = df.select_dtypes(include=['object']).columns
@@ -96,37 +136,55 @@ def get_dummies(df):
             else:
                 df = pd.get_dummies(df, columns=[col], drop_first=True)
     return df
-# ___________________________Function to generate various plot types using Matplotlib_____________________________
-def generate_and_display_plot(df, df_converted, plot_type, x_column, y_column):
-    if plot_type == "Heatmap":
-        heat_map_img = heat_map(df_converted)
-        if isinstance(heat_map_img, str): #check for error message
-            st.error(heat_map_img)
-        else:
-            st.image(heat_map_img, caption=f"Correlation of the dataset")
-    elif plot_type == "Pie":
-        pie_plot_img = pie_plot(df_converted, x_column)
-        if isinstance(pie_plot_img, str): #check for error message
-            st.error(pie_plot_img)
-        else:
-            st.image(pie_plot_img, caption=f"Pie chart of the attribute {x_column}")
-    else:
-        plot_img = generate_plot(df, x_column, y_column, plot_type)
-        st.image(plot_img, caption=f"{plot_type}: {y_column} vs {x_column}")
-    return
-
+# ___________________________Function to generate various plot types using PLotly_____________________________
     # New function to generate a plot for the output
 def generate_output_plot(output):
-    if isinstance(output, pd.DataFrame):
-        output_plot = output.plot(kind='bar')
-        st.pyplot(output_plot.figure)
-    elif isinstance(output, pd.Series):
-        output_plot = output.plot(kind='line')
-        st.pyplot(output_plot.figure)
-    else:
-        st.write("Output is not a DataFrame or Series, cannot generate plot")
-        return output_plot
-
+    try:
+        if isinstance(output, pd.DataFrame):
+            if len(output.columns) == 2:
+                fig = px.scatter(output, x=output.columns[0], y=output.columns[1])
+                fig.data[0].name = output.columns[1]  # Use column name directly
+            else:
+                fig = px.bar(output)
+                # Update trace names to use column names directly
+                for i, trace in enumerate(fig.data):
+                    trace.name = output.columns[i]
+            
+            fig.update_layout(
+                title="Output Visualization",
+                showlegend=True,
+                legend=dict(
+                    yanchor="top",
+                    y=0.99,
+                    xanchor="left",
+                    x=1.02
+                )
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+        elif isinstance(output, pd.Series):
+            fig = px.line(output)
+            fig.data[0].name = output.name if output.name else "Value"
+            
+            fig.update_layout(
+                title="Output Visualization",
+                showlegend=True,
+                legend=dict(
+                    yanchor="top",
+                    y=0.99,
+                    xanchor="left",
+                    x=1.02
+                )
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+        else:
+            st.write("Output is not a DataFrame or Series, cannot generate plot")
+            
+    except Exception as e:
+        st.error(f"Error generating output plot: {e}")
     # Call the new function to generate a plot for the output
 def save_response(response):
     try:
@@ -187,21 +245,6 @@ if option == "Chat with uploaded file":
             st.write("Data after getting dummies:")
             st.dataframe(df_converted.head(100))
 
-        # Dropdowns for selecting x and y columns for plotting
-        st.sidebar.subheader("Select Columns and Plot Type")
-        plot_type = st.sidebar.selectbox("Select Plot Type", ["Line Plot", "Bar Plot", "Histogram","Heatmap","Pie"])
-
-        if plot_type != "Heatmap":
-            x_column = st.sidebar.selectbox("Select X column", df.columns)
-            if plot_type != "Pie":
-                y_column = st.sidebar.selectbox("Select Y column", df.columns)
-            else:
-                y_column = None
-        else:
-            x_column = None
-            y_column = None
-
-
         # Initialize SmartDataFrame
         llm = GoogleGemini(api_key=GOOGLE_API_KEY)
         sdf = SmartDataframe(df, config={"llm": llm, "response_parser": OutputParser})
@@ -214,28 +257,81 @@ if option == "Chat with uploaded file":
         st.write(response)
         st.code(sql_response.text)
         st.success("Thank you for using our assistant. Have a great day!")
-col1, col2 = st.columns(2)
-with col1, col2:
-# Plot button and handling
-        with col1:
-            st.header("Plot Options")
-            if st.button("Generate plot from the dataset"):
-                df_converted = get_dummies(df) # Convert categorical data to numeric for heatmap
-                generate_and_display_plot(df, df_converted, plot_type, x_column, y_column)
-                st.success("Thank you for using our assistant. Have a great day!")
-            # Output plot button and handling
-            if st.button("Generate Output Plot"):
-                generate_output_plot(response)
-                st.success("Thank you for using our assistant. Have a great day!")
-    # _______________________________Button to save response______________________________________
-        with col2:
-            st.header("SAVE RESPONSE")
-            if st.button("SAVE RESPONSE"):
-                save_response(response)
-                st.success("Response saved!")
-                st.success("Thank you for using our assistant. Have a great day!")
+# Dropdowns for selecting x and y columns for plotting
+st.sidebar.subheader("Select Columns and Plot Type")
+st.divider()
+# Create column selectors only if dataframe exists
+if df is not None:
+    # Get numeric columns for plotting
+    numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+    all_columns = df.columns.tolist()
 
+    # Plot type selector (moved to top)
+    plot_type = st.sidebar.selectbox(
+        "Select Plot Type",
+        [
+            "📈 Line Plot",
+            "📊 Bar Plot",
+            "📉 Histogram",
+            "🥧 Pie Chart",
+            "🌡️ Heatmap"
+        ]
+    )
 
+    # Column selectors based on plot type
+    if plot_type in ["🥧 Pie Chart", "📉 Histogram"]:
+        # Only show X-axis selection for pie chart and heatmap
+        x_column = st.sidebar.selectbox("Select column", all_columns)
+        y_column = None  # Not needed for these plot types
+    elif plot_type == "🌡️ Heatmap":
+        x_column = None
+        y_column = None
+    else:
+        # Show both X and Y axis selection for other plot types
+        x_column = st.sidebar.selectbox("Select X-axis column", all_columns)
+        y_column = st.sidebar.selectbox("Select Y-axis column", numeric_columns)
+
+    # Generate plot button
+    if st.sidebar.button("Generate Plot From The Dataset"):
+        with st.spinner("Generating Plot..."):
+            try:
+                if plot_type in ["📈 Line Plot", "📊 Bar Plot"]:
+                    fig = generate_plot(df, x_column, y_column, plot_type)
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                elif plot_type == "📉 Histogram":
+                    fig = histogram(df, x_column)
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                elif plot_type == "🥧 Pie Chart":
+                    fig = pie_plot(df, x_column)
+                    if isinstance(fig, str):  # If there's an error
+                        st.error(fig)
+                    else:
+                        st.plotly_chart(fig, use_container_width=True)
+                
+                elif plot_type == "🌡️ Heatmap":
+                    # Convert categorical columns to numeric for heatmap
+                    df_numeric = get_dummies(df.copy())
+                    heatmap_buffer = heat_map(df_numeric)
+                    if isinstance(heatmap_buffer, str):  # If there's an error
+                        st.error(heatmap_buffer)
+                    else:
+                        st.image(heatmap_buffer)
+                
+                st.success("Plot generated successfully!")
+                
+            except Exception as e:
+                st.error(f"Error generating plot: {e}")
+                st.info("Please make sure you've selected appropriate columns for the chosen plot type.")
+    
+    elif st.sidebar.button("Generate Output Plot"):
+        with st.spinner("Generating Output Plot..."):
+            generate_output_plot(response)
+        st.success("Thank you for using our assistant. Have a great day!")
+else:
+    st.sidebar.warning("Please upload a dataset first to create plots.")
 # ________________________________Button to generate SQL query without dataset_____________________________________
 st.divider()
 if st.button("GENERATE SQL QUERY"):
