@@ -290,7 +290,7 @@ if df is not None:
     else:
         # Show both X and Y axis selection for other plot types
         x_column = st.sidebar.selectbox("Select X-axis column", all_columns)
-        y_column = st.sidebar.selectbox("Select Y-axis column", numeric_columns)
+        y_column = st.sidebar.selectbox("Select Y-axis column", all_columns)
 
     # Generate plot button
     if st.sidebar.button("Generate Plot From The Dataset"):
