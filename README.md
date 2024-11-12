@@ -6,7 +6,7 @@ This Streamlit-powered Assistant leverages Google's Generative AI to help develo
 ## 🌟 Features
 - Generate SQL queries from natural language inputs
 - Support for multiple CSV/EXCEL file dialects
-- Generate plots for simple visualization
+- Generate plots for interactive visualization
 - User-friendly Streamlit interface
 - Powered by Google's advanced generative AI
 - Query validation and optimization suggestions
