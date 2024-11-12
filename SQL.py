@@ -12,7 +12,7 @@ import numpy as np
 import chardet
 import pyodbc
 from langchain.utilities import SQLDatabase
-
+#streamlit run SQL.py
 # API Keys 
 GOOGLE_API_KEY = "AIzaSyBxLB3VTohn1tmfG2kMe_Is_XHkRIH7rZU"
 # BUILD MODEL
@@ -44,6 +44,7 @@ class OutputParser(ResponseParser):
 # ___________________________Function to generate various plot types using Seaborn_____________________________
 def generate_plot(df, x_column, y_column, plot_type):
     plt.figure(figsize=(10, 6))
+    plt.title(f"Plot for {plot_type} between {x_column} and {y_column}")
     if plot_type == "Line Plot":
         sns.lineplot(data=df, x=x_column, y=y_column, marker='o')
     elif plot_type == "Bar Plot":
@@ -63,6 +64,7 @@ def generate_plot(df, x_column, y_column, plot_type):
 def heat_map(df):
     plt.figure(figsize=(10, 8))
     try:
+        plt.title("Correlation of the dataset")
         sns.heatmap(df.corr(), vmin=-1, vmax=1, center=0, annot=True, cmap='coolwarm', annot_kws={'fontsize': 8, 'fontweight': 'bold'}, cbar=False)
         buf_heat = io.BytesIO()
         plt.savefig(buf_heat, format='png')
@@ -75,6 +77,7 @@ def heat_map(df):
 def pie_plot(df, x_column):
     plt.figure(figsize=(10, 8))
     try:
+        plt.title(f"Pie chart of the attribute {x_column}")
         plt.pie(df[x_column].value_counts(), labels=df[x_column].value_counts().index, autopct='%1.1f%%')
         buf_pie = io.BytesIO()
         plt.savefig(buf_pie, format='png')
@@ -87,7 +90,11 @@ def pie_plot(df, x_column):
 def get_dummies(df):
     categorical_cols = df.select_dtypes(include=['object']).columns
     if len(categorical_cols) > 0:
-        df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
+        for col in categorical_cols:
+            if df[col].isin(['yes', 'no', 'True', 'False']).any():
+                df[col] = df[col].map({'yes': 1, 'True': 1, 'no': 0, 'False': 0})
+            else:
+                df = pd.get_dummies(df, columns=[col], drop_first=True)
     return df
 # ___________________________Function to generate various plot types using Matplotlib_____________________________
 def generate_and_display_plot(df, df_converted, plot_type, x_column, y_column):
@@ -171,7 +178,7 @@ if option == "Chat with uploaded file":
     except Exception as e:
         st.error(f"An unexpected error occurred: {e}")
         df = None
-    #______________________________Generate answer and plot______________________________________
+#______________________________Generate answer and plot______________________________________
     if df is not None:
         with st.expander("Data Preview"):
             st.dataframe(df.head(100))
@@ -207,26 +214,30 @@ if option == "Chat with uploaded file":
         st.write(response)
         st.code(sql_response.text)
         st.success("Thank you for using our assistant. Have a great day!")
-        
-
+col1, col2 = st.columns(2)
+with col1, col2:
 # Plot button and handling
-        st.header("Plot Options")
-        if st.button("Generate plot from the dataset"):
-            df_converted = get_dummies(df) # Convert categorical data to numeric for heatmap
-            generate_and_display_plot(df, df_converted, plot_type, x_column, y_column)
-            st.success("Thank you for using our assistant. Have a great day!")
-        # Output plot button and handling
-        if st.button("Generate Output Plot"):
-            generate_output_plot(response)
-            st.success("Thank you for using our assistant. Have a great day!")
+        with col1:
+            st.header("Plot Options")
+            if st.button("Generate plot from the dataset"):
+                df_converted = get_dummies(df) # Convert categorical data to numeric for heatmap
+                generate_and_display_plot(df, df_converted, plot_type, x_column, y_column)
+                st.success("Thank you for using our assistant. Have a great day!")
+            # Output plot button and handling
+            if st.button("Generate Output Plot"):
+                generate_output_plot(response)
+                st.success("Thank you for using our assistant. Have a great day!")
     # _______________________________Button to save response______________________________________
-        if st.button("SAVE RESPONSE"):
-            save_response(response)
-            st.success("Response saved!")
-            st.success("Thank you for using our assistant. Have a great day!")
+        with col2:
+            st.header("SAVE RESPONSE")
+            if st.button("SAVE RESPONSE"):
+                save_response(response)
+                st.success("Response saved!")
+                st.success("Thank you for using our assistant. Have a great day!")
 
 
 # ________________________________Button to generate SQL query without dataset_____________________________________
+st.divider()
 if st.button("GENERATE SQL QUERY"):
     if input_text.strip():
         try:
