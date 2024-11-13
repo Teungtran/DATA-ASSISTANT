@@ -154,7 +154,7 @@ def generate_output_plot(output):
     try:
         if isinstance(output, pd.DataFrame):
             if len(output.columns) == 2:
-                fig = px.scatter(output, x=output.columns[0], y=output.columns[1])
+                fig = px.bar(output, x=output.columns[0], y=output.columns[1])
                 fig.data[0].name = output.columns[1]  # Use column name directly
             else:
                 fig = px.bar(output)
@@ -252,7 +252,7 @@ if option == "Chat with uploaded file":
     if df is not None:
         with st.expander("Data Preview"):
             st.dataframe(df.head(100))
-        if st.button("Convert Categorical data to Numberic"):
+        if st.button("Convert Categorical data to Numeric"):
             df_converted = get_dummies(df)
             st.write("Data after getting dummies:")
             st.dataframe(df_converted.head(100))
@@ -273,6 +273,7 @@ if option == "Chat with uploaded file":
 st.sidebar.subheader("Select Columns and Plot Type")
 st.divider()
 # Create column selectors only if dataframe exists
+df = None
 if df is not None:
     # Get numeric columns for plotting
     numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
@@ -344,6 +345,8 @@ if df is not None:
         st.success("Thank you for using our assistant. Have a great day!")
 else:
     st.sidebar.warning("Please upload a dataset first to create plots.")
+    if st.button("Save Response"):
+        save_response(response)
 # ________________________________Button to generate SQL query without dataset_____________________________________
 st.divider()
 if st.button("GENERATE SQL QUERY"):
