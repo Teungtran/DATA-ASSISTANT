@@ -62,7 +62,7 @@ def generate_plot(df, x_column, y_column, plot_type):
     fig.update_layout(
         xaxis_title=x_column,
         yaxis_title=y_column,
-        template="plotly_white",
+        template="plotly_dark",
         showlegend=True,
         legend=dict(
             yanchor="top",
@@ -79,6 +79,18 @@ def histogram(df, x_column):
                         
         # Set the trace name to the y-column name directly
         fig.data[0].name = x_column
+    fig.update_layout(
+        xaxis_title=x_column,
+        yaxis_title=y_column,
+        template="plotly_dark",
+        showlegend=True,
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=1.02
+        )
+    )
     return fig
 
 def heat_map(df):
