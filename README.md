@@ -1,77 +1,72 @@
 # DATA ANALYST ASSISSTANT 🤖💾
 
-## Overview
-This Streamlit-powered Assistant leverages Google's Generative AI to help developers and data professionals quickly generate SQL queries , Plots based on natural language descriptions.
+## Tổng quan
+Trợ lý này được hỗ trợ bởi Streamlit và sử dụng AI Sinh thành của Google để giúp các nhà phát triển và chuyên gia dữ liệu nhanh chóng tạo ra các truy vấn SQL, biểu đồ dựa trên mô tả bằng ngôn ngữ tự nhiên.
 
-## 🌟 Features
-- Generate SQL queries from natural language inputs
-- Support for multiple CSV/EXCEL file dialects
-- Generate plots for interactive visualization
-- User-friendly Streamlit interface
-- Powered by Google's advanced generative AI
-- Query validation and optimization suggestions
+## 🌟 Tính năng
+- Tạo truy vấn SQL từ đầu vào ngôn ngữ tự nhiên
+- Hỗ trợ nhiều định dạng file CSV/EXCEL
+- Tạo biểu đồ để trực quan hóa tương tác
+- Giao diện Streamlit thân thiện với người dùng
+- Được hỗ trợ bởi AI sinh thành tiên tiến của Google
+- Xác thực truy vấn và đề xuất tối ưu hóa
 
-## 🛠 Prerequisites
+## 🛠 Yêu cầu tiên quyết
 - Python 3.8+
 - Streamlit
 - Google Generative AI SDK
 - Google Cloud API Key
 - pandasai
 
-## 📦 Installation
-
-### 1. Clone the Repository
+## 📦 Cài đặt
+### 1. Sao chép Kho lưu trữ
 ```bash
 git clone https://github.com/your-username/DATA-ASSISTANT.git
 cd DATA-ASSISTANT
 ```
 
-### 2. Create Virtual Environment
+### 2. Tạo Môi trường Ảo
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+source venv/bin/activate  # Trên Windows, sử dụng `venv\Scripts\activate`
 ```
 
-### 3. Install Dependencies
+### 3. Cài đặt Các Gói Phụ thuộc
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Set Up Google Cloud Credentials
-1. Create a Google Cloud project
-2. Enable the Generative AI API
-3. Create a service account and download the JSON key
-4. Set the environment variable:
+### 4. Thiết lập Thông tin Xác thực Google Cloud
+1. Tạo một dự án Google Cloud
+2. Kích hoạt API Generative AI
+3. Tạo tài khoản dịch vụ và tải xuống khóa JSON
+4. Thiết lập biến môi trường:
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/credentials.json"
 ```
 
-## 🚀 Running the Application
+## 🚀 Chạy Ứng dụng
 ```bash
 streamlit run SQL.py
 ```
 
-## 🔧 Configuration
-
-
+## 🔧 Cấu hình
 ai_settings:
   max_query_length: 500
   temperature: 0.7
   safety_threshold: moderate
-```
 
-## 📝 Usage Examples
-
-### 1. Basic Query Generation
-- Input: "Get all customers from New York"
-- Output: 
+## 📝 Ví dụ Sử dụng
+### 1. Tạo Truy vấn Cơ bản
+- Đầu vào: "Lấy tất cả khách hàng từ New York"
+- Đầu ra: 
   ```sql
   SELECT * FROM customers WHERE city = 'New York';
   ```
 
-### 2. Complex Query Generation
-- Input: "Find top 5 products by sales in the last quarter"
-- Output:
+### 2. Tạo Truy vấn Phức tạp
+- Đầu vào: "Tìm 5 sản phẩm bán chạy nhất trong quý vừa qua"
+- Đầu ra:
   ```sql
   SELECT 
     product_id, 
@@ -84,62 +79,26 @@ ai_settings:
   LIMIT 5;
   ```
 
+## 🛡️ Bảo mật
+- Không bao giờ commit khóa API hoặc thông tin xác thực nhạy cảm vào kho lưu trữ
+- Sử dụng biến môi trường hoặc quản lý bí mật an toàn
+- Triển khai kiểm tra đầu vào để ngăn chặn SQL injection
 
-## 🛡️ Security
-- Never commit API keys or sensitive credentials to the repository
-- Use environment variables or secure secret management
-- Implement input sanitization to prevent SQL injection
+## 📊 Chỉ số Hiệu suất
+- Thời gian tạo truy vấn trung bình: < 2 giây
+- Hỗ trợ hơn 60 loại SQL mỗi phút
 
-## 📊 Performance Metrics
-- Average query generation time: < 2 seconds
-- Support for 60+ SQL dialects per minute
+## 🚧 Hạn chế
+- Phụ thuộc vào chất lượng và độ cụ thể của mô tả đầu vào
+- Yêu cầu hiểu biết cơ bản về cấu trúc cơ sở dữ liệu
+- Không có chức năng kết nối với cơ sở dữ liệu của bạn
+- Biểu đồ không linh hoạt (chỉ hỗ trợ biểu đồ Line, Bar, Hist, heatmap và pie chart)
+- Chỉ hỗ trợ file CSV/EXCEL dưới 200MB
 
-## 📝 Usage Examples
-
-### 1. Basic Query Generation
-- Input: "Get all customers from New York"
-- Output: 
-  ```sql
-  SELECT * FROM customers WHERE city = 'New York';
-  ```
-
-### 2. Complex Query Generation
-- Input: "Find top 5 products by sales in the last quarter"
-- Output:
-  ```sql
-  SELECT 
-    product_id, 
-    product_name, 
-    SUM(sales_amount) as total_sales
-  FROM sales
-  WHERE sale_date BETWEEN '2023-10-01' AND '2023-12-31'
-  GROUP BY product_id, product_name
-  ORDER BY total_sales DESC
-  LIMIT 5;
-  ```
-
-
-## 🛡️ Security
-- Never commit API keys or sensitive credentials to the repository
-- Use environment variables or secure secret management
-- Implement input sanitization to prevent SQL injection
-
-## 📊 Performance Metrics
-- Average query generation time: < 2 seconds
-- Support for 60+ SQL dialects per minute
-
-## 🚧 Limitations
-- Dependent on the quality and specificity of input description
-- Requires basic understanding of database schema
-- Do not have function to connect to your database  
-- inflexibel plots ( only support Line, Bar, Hist plot, heatmap and pie chart)
-- only support under 200mb input CSV/EXCEL file
-
-## 🙏 Acknowledgments
+## 🙏 Lời cảm ơn
 - [Streamlit](https://streamlit.io/)
 - [Google Generative AI](https://cloud.google.com/ai)
-- Open-source community
+- Cộng đồng mã nguồn mở
 
 ---
-
-**Disclaimer**: This tool is an AI assistant and should be used with careful review. Always validate generated SQL queries before execution.
+**Tuyên bố miễn trừ trách nhiệm**: Công cụ này là một trợ lý AI và nên được sử dụng với sự xem xét cẩn thận. Luôn xác thực các truy vấn SQL được tạo ra trước khi thực thi.
