@@ -42,6 +42,54 @@ class OutputParser(ResponseParser):
     def format_response(self, result):
         st.write(result["value"])
         return
+#_____________________________function to analyse dataset__________________________________
+def detect_outliers(df):
+    numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
+    outliers_summary = {}
+    
+    for col in numerical_cols:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        
+        outliers = df[(df[col] < lower_bound) | (df[col] > upper_bound)]
+        outliers_count = outliers.shape[0]
+        if outliers_count > 0:
+            outliers_summary[col] = outliers_count
+        else:
+            outliers_summary[col] = 0
+    
+    if len(outliers_summary) > 0:
+        outliers_info = "\n".join([f"{col}: {count} outliers" for col, count in outliers_summary.items()])
+    else:
+        outliers_info = "No outliers detected."
+    
+    return outliers_info
+def analyze_dataset(df):
+    if not isinstance(df, pd.DataFrame):
+        return "Input is not a valid DataFrame."
+    
+    # 1. Number of rows and columns
+    num_rows, num_columns = df.shape
+    dataset_info = f"Dataset Info:\n- Number of rows: {num_rows} : - Number of columns: {num_columns}\n\n"
+    
+    # 2. Data types of each column
+    data_types = df.dtypes
+    dataset_info += "Data Types of Columns:\n" + data_types.apply(lambda x: f": {x}").to_string() + "\n\n"
+    
+    # 3. Null Values
+    null_values = df.isnull().sum()
+    dataset_info += "Null Values per Column:\n" + null_values.apply(lambda x: f": {x}").to_string() + "\n\n"
+    
+    # 4. Detecting Outliers
+    outliers_info = detect_outliers(df)
+    dataset_info += f"\nOutliers Summary:\n{outliers_info}"
+    
+    return dataset_info
+
+
 
 # ___________________________Function to generate various plot types using PLotly_____________________________
 def generate_plot(df, x_column, y_column, plot_type):
@@ -197,7 +245,7 @@ def generate_output_plot(output):
             
     except Exception as e:
         st.error(f"Error generating output plot: {e}")
-    # function to save response as CSV filefile
+    # Call the new function to generate a plot for the output
 def save_response(response):
     try:
         if isinstance(response, pd.DataFrame):
@@ -256,7 +304,10 @@ if option == "Chat with uploaded file":
             df_converted = get_dummies(df)
             st.write("Data after getting dummies:")
             st.dataframe(df_converted.head(100))
-
+        elif st.button("Analyze Dataset"):
+            with st.spinner("Analyzing dataset..."):
+                dataset_info = analyze_dataset(df)
+                st.text_area("Dataset Analysis", dataset_info, height=400)
         # Initialize SmartDataFrame
         llm = GoogleGemini(api_key=GOOGLE_API_KEY)
         sdf = SmartDataframe(df, config={"llm": llm, "response_parser": OutputParser})
