@@ -304,7 +304,7 @@ if option == "Chat with uploaded file":
             df_converted = get_dummies(df)
             st.write("Data after getting dummies:")
             st.dataframe(df_converted.head(100))
-        elif st.button("Analyze Dataset"):
+        if st.button("Analyze Dataset"):
             with st.spinner("Analyzing dataset..."):
                 dataset_info = analyze_dataset(df)
                 st.text_area("Dataset Analysis", dataset_info, height=400)
@@ -324,7 +324,7 @@ if option == "Chat with uploaded file":
 st.sidebar.subheader("Select Columns and Plot Type")
 st.divider()
 # Create column selectors only if dataframe exists
-df = None
+#df = None
 if df is not None:
     # Get numeric columns for plotting
     numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
@@ -396,8 +396,8 @@ if df is not None:
         st.success("Thank you for using our assistant. Have a great day!")
 else:
     st.sidebar.warning("Please upload a dataset first to create plots.")
-    if st.button("Save Response"):
-        save_response(response)
+if st.button("Save Response"):
+    save_response(response)
 # ________________________________Button to generate SQL query without dataset_____________________________________
 st.divider()
 if st.button("GENERATE SQL QUERY"):
