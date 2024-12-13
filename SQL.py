@@ -12,7 +12,7 @@ from data_analysis import analyze_dataset
 from Visualization import *
 #streamlit run SQL.py
 # API Keys 
-GOOGLE_API_KEY = "AIzaSyBxLB3VTohn1tmfG2kMe_Is_XHkRIH7rZU"
+GOOGLE_API_KEY = "YOUR API KEY"
 # BUILD MODEL
 try:
     genai.configure(api_key=GOOGLE_API_KEY)
