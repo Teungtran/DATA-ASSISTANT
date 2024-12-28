@@ -31,7 +31,6 @@ st.divider()
 st.sidebar.header('INSTRUCTION')
 st.sidebar.info('WRITE YOUR QUESTION IN ENGLISH THEN LET THE AI DO THE REST!')
 st.sidebar.info('THE MODEL USES GEN_AI USING GEMINI API AND WILL PROVIDE EXPLANATIONS AS WELL.')
-
 # File uploader
 option = st.sidebar.selectbox("Select an option", ["Chat with uploaded file", "Chat with SQL query"])
 
@@ -65,6 +64,7 @@ if option == "Chat with uploaded file":
             with st.spinner("Analyzing dataset..."):
                 dataset_info = analyze_dataset(df)
                 st.text_area("Dataset Analysis", dataset_info, height=400)
+
         # Chat interface
         setup_chat_history()
         if df is not None:
@@ -72,12 +72,14 @@ if option == "Chat with uploaded file":
         # Save response
         if st.button("Save response") and result is not None:
             save_response(result)
+
         # Dropdowns for selecting x and y columns for plotting
         st.sidebar.subheader("Select Columns and Plot Type")
         if df is not None:
             numeric_columns = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
             categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
             all_columns = df.columns.tolist()
+
             plot_type = st.sidebar.selectbox(
                 "Select Plot Type",
                 [
@@ -88,6 +90,7 @@ if option == "Chat with uploaded file":
                     "🌡️ Heatmap"
                 ]
             )
+
             if plot_type in ["🥧 Pie Chart", "📉 Histogram"]:
                 x_column = st.sidebar.selectbox("Select column", all_columns)
                 y_column = None
@@ -97,6 +100,7 @@ if option == "Chat with uploaded file":
             else:
                 x_column = st.sidebar.selectbox("Select X-axis column", all_columns)
                 y_column = st.sidebar.selectbox("Select Y-axis column", all_columns)
+
             if st.sidebar.button("Generate Plot From The Dataset"):
                 with st.spinner("Generating Plot..."):
                     try:
@@ -120,8 +124,11 @@ if option == "Chat with uploaded file":
                             else:
                                 st.image(heatmap_buffer)
                         st.success("Plot generated successfully!")
+
                     except Exception as e:
                         st.error(f"Error generating plot: {e}")
+
+
 elif option == "Chat with SQL query":
     st.title("Chat with SQL query")
     st.write("Enter your question and get the SQL query as the answer.")
