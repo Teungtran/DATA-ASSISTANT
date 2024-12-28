@@ -116,54 +116,6 @@ def get_dummies(df):
     return df
 # ___________________________Function to generate various plot types using PLotly_____________________________
     # New function to generate a plot for the output
-def generate_output_plot(output):
-    try:
-        if isinstance(output, pd.DataFrame):
-            if len(output.columns) == 2:
-                fig = px.bar(output, x=output.columns[0], y=output.columns[1])
-                fig.data[0].name = output.columns[1]  # Use column name directly
-            else:
-                fig = px.bar(output)
-                # Update trace names to use column names directly
-                for i, trace in enumerate(fig.data):
-                    trace.name = output.columns[i]
-            
-            fig.update_layout(
-                title="Output Visualization",
-                showlegend=True,
-                legend=dict(
-                    yanchor="top",
-                    y=0.99,
-                    xanchor="left",
-                    x=1.02
-                )
-            )
-            
-            st.plotly_chart(fig, use_container_width=True)
-            
-        elif isinstance(output, pd.Series):
-            fig = px.line(output)
-            fig.data[0].name = output.name if output.name else "Value"
-            
-            fig.update_layout(
-                title="Output Visualization",
-                showlegend=True,
-                legend=dict(
-                    yanchor="top",
-                    y=0.99,
-                    xanchor="left",
-                    x=1.02
-                )
-            )
-            
-            st.plotly_chart(fig, use_container_width=True)
-            
-        else:
-            st.write("Output is not a DataFrame or Series, cannot generate plot")
-            
-    except Exception as e:
-        st.error(f"Error generating output plot: {e}")
-    # Call the new function to generate a plot for the output
 def save_response(response):
     try:
         if isinstance(response, pd.DataFrame):
