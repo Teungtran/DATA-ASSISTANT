@@ -3,7 +3,6 @@ import google.generativeai as genai
 import io
 from pandasai import SmartDataframe
 from pandasai.llm import GoogleGemini
-from pandasai.responses.response_parser import ResponseParser
 import pandas as pd
 import csv
 import numpy as np
@@ -11,9 +10,8 @@ import chardet
 import os
 from data_analysis import analyze_dataset
 from Visualization import *
-
+from chat_logic import setup_chat_history, handle_chat_interface
 # Streamlit run command: streamlit run SQL.py
-
 # API Keys
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
@@ -26,28 +24,6 @@ except Exception as e:
     st.error(f"Error loading Gemini Pro model: {e}")
     st.stop()
 
-# Chat history initialization
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-
-# Custom ResponseParser to handle plot generation
-class OutputParser(ResponseParser):
-    def __init__(self, context) -> None:
-        super().__init__(context)
-
-    def format_plot(self, result):
-        st.image(result["value"])
-        return
-
-    def format_dataframe(self, result):
-        st.dataframe(result["value"])
-        return
-
-    def format_response(self, result):
-        st.write(result["value"])
-        return
-
-# Set up the Streamlit interface
 st.set_page_config(page_title="YOUR DATA ANALYST ASSISTANT", layout="wide")
 st.title("DATA ANALYST ASSISTANT🤖💾")
 st.divider()
@@ -88,51 +64,10 @@ if option == "Chat with uploaded file":
             with st.spinner("Analyzing dataset..."):
                 dataset_info = analyze_dataset(df)
                 st.text_area("Dataset Analysis", dataset_info, height=400)
-
         # Chat interface
-        st.markdown("### Chat Interface")
-        for chat in st.session_state.chat_history:
-            st.markdown(f"**User:** {chat['input']}")
-            st.markdown(f"**Assistant:** {chat['response']}")
-            if chat.get("sql_code"):
-                st.code(chat["sql_code"], language="sql")
-
-        input_text = st.text_input("Enter your question:")
-        if st.button("Send") and input_text.strip():
-            try:
-                llm = GoogleGemini(api_key=GOOGLE_API_KEY)
-                response_text = None
-                sql_code = None
-
-                if df is not None:
-                    sdf = SmartDataframe(df, config={"llm": llm, "response_parser": OutputParser})
-                    response_text = sdf.chat(input_text)
-                else:
-                    response_text = model.generate_content(input_text).text
-
-                sql_prompt = f"Generate the SQL code for the following question: '{input_text}'"
-                sql_code = model.generate_content(sql_prompt).text
-
-                st.session_state.chat_history.append({
-                    "input": input_text,
-                    "response": response_text,
-                    "sql_code": sql_code
-                })
-
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-
-        if st.sidebar.button("Save Chat History"):
-            with open("chat_history.txt", "w") as file:
-                for chat in st.session_state.chat_history:
-                    file.write(f"User: {chat['input']}\n")
-                    file.write(f"Assistant: {chat['response']}\n")
-                    if chat.get("sql_code"):
-                        file.write(f"SQL Code:\n{chat['sql_code']}\n")
-                    file.write("\n")
-            st.sidebar.success("Chat history saved!")
-
-        st.sidebar.markdown("---")
+        setup_chat_history()
+        if df is not None:
+            handle_chat_interface(df, GOOGLE_API_KEY, model)
 
     # Dropdowns for selecting x and y columns for plotting
     st.sidebar.subheader("Select Columns and Plot Type")
