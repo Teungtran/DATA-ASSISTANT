@@ -40,7 +40,7 @@ def generate_plot(df, x_column, y_column, plot_type):
     )
     
     return fig
-def histogram(df, x_column):
+def histogram(df, x_column,plot_type):
     if plot_type == "📉 Histogram":
         fig = px.histogram(df, x=x_column, nbins=30, title=f"Histogram: {x_column}")
                         
@@ -48,7 +48,6 @@ def histogram(df, x_column):
         fig.data[0].name = x_column
     fig.update_layout(
         xaxis_title=x_column,
-        yaxis_title=y_column,
         template="plotly_dark",
         showlegend=True,
         legend=dict(
