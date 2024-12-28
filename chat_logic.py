@@ -75,7 +75,6 @@ def handle_chat_interface(df, google_api_key, model):
             with st.chat_message("user"):
                 st.write(chat["input"])
             with st.chat_message("assistant"):
-                # Display the response depending on the type of the result
                 if isinstance(chat["response"], pd.DataFrame):  # Check if it's a DataFrame
                     st.dataframe(chat["response"])
                 else:
@@ -92,9 +91,9 @@ def handle_chat_interface(df, google_api_key, model):
             # Display response dynamically
             with st.chat_message("assistant"):
                 if isinstance(result, pd.DataFrame):  
-                    st.dataframe(result)
+                        st.dataframe(result)
                 else:
-                    st.write(result)
+                        st.write(result)
             if st.button("sql_code"):
                 st.code(sql_code, language="sql")
 
