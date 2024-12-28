@@ -105,7 +105,7 @@ if option == "Chat with uploaded file":
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot_type == "📉 Histogram":
-                        fig = histogram(df, x_column)
+                        fig = histogram(df, x_column,plot_type)
                         st.plotly_chart(fig, use_container_width=True)
 
                     elif plot_type == "🥧 Pie Chart":
