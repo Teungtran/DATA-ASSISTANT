@@ -18,7 +18,7 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # Build model
 try:
     genai.configure(api_key=GOOGLE_API_KEY)
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-2.0-flash-exp')
     print("Gemini Pro model loaded successfully.")
 except Exception as e:
     st.error(f"Error loading Gemini Pro model: {e}")
