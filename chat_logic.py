@@ -4,7 +4,6 @@ from pandasai import SmartDataframe
 from pandasai.llm import GoogleGemini
 from pandasai.responses.response_parser import ResponseParser
 import pandas as pd
-# Custom ResponseParser to handle plot generation
 # Custom ResponseParser to handle output formatting
 class OutputParser(ResponseParser):
     def __init__(self, context) -> None:
