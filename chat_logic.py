@@ -23,9 +23,6 @@ def setup_chat_history():
         st.session_state.chat_history = []
     if "previous_file" not in st.session_state:
         st.session_state.previous_file = None   
-
-def clear_chat_history():
-    st.session_state.chat_history = []
 def display_chat_history():
     for chat in st.session_state.chat_history:
         st.markdown(f"**User:** {chat['input']}")
