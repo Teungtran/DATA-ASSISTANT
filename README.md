@@ -1,7 +1,7 @@
 # DATA ANALYST ASSISSTANT 🤖💾
 
 ## Tổng quan
-Trợ lý này được hỗ trợ bởi Streamlit và sử dụng Gemini AI của Google để giúp các nhà phát triển và chuyên gia dữ liệu nhanh chóng tạo ra các truy vấn SQL, biểu đồ dựa trên mô tả bằng ngôn ngữ tự nhiên.
+Trợ lý này được hỗ trợ bởi Streamlit và sử dụng Gemini AI của Google để giúp các nhà phát triển và chuyên gia dữ liệu nhanh chóng tạo ra các truy vấn SQL, biểu đồ , tạo báo cáo dựa trên mô tả bằng ngôn ngữ tự nhiên.
 
 ## 🌟 Tính năng
 - Tạo truy vấn SQL từ đầu vào ngôn ngữ tự nhiên
