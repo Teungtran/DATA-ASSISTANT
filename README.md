@@ -85,8 +85,7 @@ ai_settings:
 - Triển khai kiểm tra đầu vào để ngăn chặn SQL injection
 
 ## 📊 Chỉ số Hiệu suất
-- Thời gian tạo truy vấn trung bình: < 2 giây
-- Hỗ trợ hơn 60 loại SQL mỗi phút
+- Thời gian tạo truy vấn trung bình: 2-10s ( Tùy vào độ phức tạp theo truy vấn)
 
 ## 🚧 Hạn chế
 - Phụ thuộc vào chất lượng và độ cụ thể của mô tả đầu vào
