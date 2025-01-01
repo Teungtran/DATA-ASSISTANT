@@ -93,6 +93,8 @@ ai_settings:
 - Không có chức năng kết nối với cơ sở dữ liệu của bạn
 - Biểu đồ không linh hoạt (chỉ hỗ trợ biểu đồ Line, Bar, Hist, heatmap và pie chart)
 - Chỉ hỗ trợ file CSV/EXCEL dưới 200MB
+- Viết prompt phải rõ ràng và cụ thể
+- Google Gemini không phải một model tối ưu nhất , có thể cân nhắc sử dụng OPENAI nếu có bản Premium , không giới hạn quotaquota
 
 ## 🙏 Lời cảm ơn
 - [Streamlit](https://streamlit.io/)
