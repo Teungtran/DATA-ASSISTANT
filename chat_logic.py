@@ -5,7 +5,6 @@ from pandasai.llm import GoogleGemini
 from pandasai.responses.response_parser import ResponseParser
 import pandas as pd
 from langchain.prompts import PromptTemplate
-from langchain.prompts.chat import ChatPromptTemplate, HumanMessagePromptTemplate
 # Custom ResponseParser to handle plot generation
 # Custom ResponseParser to handle output formatting
 class OutputParser(ResponseParser):
