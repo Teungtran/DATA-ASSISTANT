@@ -15,14 +15,9 @@
     # Streamlit run command: streamlit run AI-CHATBOT.py
     # API Keys
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    # Build model
-    try:
-        genai.configure(api_key=GOOGLE_API_KEY)
-        model = genai.GenerativeModel('gemini-2.0-flash-exp')
-        print("Gemini Pro model loaded successfully.")
-    except Exception as e:
-        st.error(f"Error loading Gemini Pro model: {e}")
-        st.stop()
+    model = None
+    if GOOGLE_API_KEY:
+        model = initialize_gemini(GOOGLE_API_KEY)
 
     st.set_page_config(page_title="YOUR DATA ANALYST ASSISTANT", layout="wide")
     st.title("DATA ANALYST ASSISTANT🤖💾")
