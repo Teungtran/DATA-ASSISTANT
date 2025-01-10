@@ -1,4 +1,6 @@
 import pandas as pd
+import datetime as dt
+import numpy as np
 def detect_outliers(df):
     numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
     outliers_summary = {}
@@ -44,3 +46,14 @@ def analyze_dataset(df):
     dataset_info += f"\nOutliers Summary:\n{outliers_info}"
     
     return dataset_info
+
+def convert_dates(df):
+    date_columns = []
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            sample = df[col].dropna().iloc[0] if not df[col].dropna().empty else ''
+            if isinstance(sample, str) and any(char in sample for char in ['-', '/', '.', ':']):
+                date_columns.append(col)
+    for col in date_columns:
+        df[col] = pd.to_datetime(df[col], errors='coerce')
+    return df
