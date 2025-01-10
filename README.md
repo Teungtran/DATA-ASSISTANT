@@ -1,4 +1,4 @@
-# DATA ANALYST ASSISSTANT 🤖💾
+# DATA ANALYST CHATBOT 🤖💾
 
 ## Tổng quan
 Trợ lý này được hỗ trợ bởi Streamlit và sử dụng Gemini AI của Google để giúp các nhà phát triển và chuyên gia dữ liệu nhanh chóng tạo ra các truy vấn SQL, biểu đồ , tạo báo cáo dựa trên mô tả bằng ngôn ngữ tự nhiên.
@@ -85,7 +85,7 @@ ai_settings:
 - Triển khai kiểm tra đầu vào để ngăn chặn SQL injection
 
 ## 📊 Chỉ số Hiệu suất
-- Thời gian tạo truy vấn trung bình: 2-10s ( Tùy vào độ phức tạp theo truy vấn)
+- Thời gian tạo truy vấn trung bình: ~10s-20s ( Tùy vào độ phức tạp theo truy vấn)
 
 ## 🚧 Hạn chế
 - Phụ thuộc vào chất lượng và độ cụ thể của mô tả đầu vào
@@ -94,6 +94,7 @@ ai_settings:
 - Biểu đồ không linh hoạt (chỉ hỗ trợ biểu đồ Line, Bar, Hist, heatmap và pie chart)
 - Chỉ hỗ trợ file CSV/EXCEL dưới 200MB
 - Viết prompt phải rõ ràng và cụ thể
+- Deploy bằng Streamlit nên thời gian xử lý prompt lâu
 - Google Gemini không phải một model tối ưu nhất , có thể cân nhắc sử dụng OPENAI nếu có bản Premium , không giới hạn quotaquota
 
 ## 🙏 Lời cảm ơn
