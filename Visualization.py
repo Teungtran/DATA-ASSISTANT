@@ -10,7 +10,7 @@ import plotly.express as px
 import streamlit as st
 import io
 import pandas as pd
-
+import os
 def generate_plot(df, x_column, y_column, plot_type):
     if plot_type == "📈 Line Plot":
         fig = px.line(df, x=x_column, y=y_column,
@@ -114,16 +114,3 @@ def get_dummies(df):
             else:
                 df = pd.get_dummies(df, columns=[col], drop_first=True)
     return df
-# ___________________________Function to generate various plot types using PLotly_____________________________
-    # New function to generate a plot for the output
-def save_response(response):
-    try:
-        if isinstance(response, pd.DataFrame):
-            response.to_csv('response.csv', index=False)
-            st.success("Response saved to response.csv")
-        else:
-            with open('response.csv', 'w') as f:
-                f.write(str(response))
-            st.success("Response saved to response.csv")
-    except Exception as e:
-        st.error(f"Error saving response: {e}")
